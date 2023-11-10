@@ -1,0 +1,38 @@
+# fly.toml app configuration file generated for dailybe on 2023-11-09T17:08:29+07:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "dailybe"
+primary_region = "sin"
+console_command = "php /var/www/html/artisan tinker"
+
+[build]
+  [build.args]
+    NODE_VERSION = "18"
+    PHP_VERSION = "8.2"
+
+
+[env]
+  APP_ENV = "production"
+  DB_CONNECTION = "mysql"
+  DB_HOST = "aws.connect.psdb.cloud"
+  DB_DATABASE = "dailyremember"
+  MYSQL_ATTR_SSL_CA="/etc/ssl/certs/ca-certificates.crt"
+  LOG_CHANNEL = "stderr"
+  LOG_LEVEL = "info"
+  LOG_STDERR_FORMATTER = "Monolog\\Formatter\\JsonFormatter"
+  SESSION_DRIVER = "cookie"
+  SESSION_SECURE_COOKIE = "true"
+  JWT_SECRET = "HRnCcehM9VAET4hxeSe5X92jfLU8Am9E8nJvQGQM5jsfrl4KKrNBxfOo31iJgWNE"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+[deploy]
+  release_command = "php artisan migrate --force"
