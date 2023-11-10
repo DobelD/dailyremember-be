@@ -9,6 +9,9 @@
 .env.backup
 .env.production
 .phpunit.result.cache
+fly.toml
+.fly
+DockerFile
 Homestead.json
 Homestead.yaml
 auth.json
