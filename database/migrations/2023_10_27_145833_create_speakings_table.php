@@ -13,8 +13,12 @@ return new class extends Migration
     {
         Schema::create('speakings', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('audio');
+            $table->string('title')->nullable();
+            $table->string('audio_path')->nullable();
+            $table->string('id_transcript')->nullable();
+            $table->text('transcript')->nullable();
+            $table->string('duration')->nullable();
+            $table->integer('user_id');
             $table->timestamps();
         });
     }
