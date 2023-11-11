@@ -111,10 +111,11 @@ class AuthController extends Controller
     protected function respondWithToken($token)
     {
         try {
+            $userId = Auth::id();
             return response()->json([
                 'access_token' => $token,
-                'token_type' => 'bearer',
-                'expires_in' => auth()->factory()->getTTL() * 60
+                'user_id'=> $userId
+                // 'expires_in' => auth()->factory()->getTTL() * 60
             ], 200);
         } catch (\Exception $e) {
             $error = $e->getMessage();

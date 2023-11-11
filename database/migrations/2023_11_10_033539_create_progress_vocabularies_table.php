@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('no_remember')->nullable();
             $table->integer('target_day')->nullable();
             $table->integer('target_remember_perday')->nullable();
+            $table->string('start_day')->nullable();
             $table->integer('user_id');
             $table->timestamps();
         });

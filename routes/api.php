@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\WordController;
+use App\Http\Controllers\FirebaseServiceController;
 use App\Http\Controllers\ProgressVocabularyController;
 
 /*
@@ -30,6 +31,8 @@ Route::group(['middleware' => 'api','prefix' => 'auth'], function ($router) {
 Route::resource('/word', WordController::class);
 Route::resource('/speaking', WordController::class);
 Route::resource('/progress-vocabulary', ProgressVocabularyController::class);
+
+Route::post('/send-notification', [FirebaseServiceController::class, 'sendFirebaseNotification']);
 
 
 

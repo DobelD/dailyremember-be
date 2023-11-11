@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\word;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use App\Models\ProgressVocabulary;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -14,12 +15,20 @@ class ProgressVocabularyController extends Controller
         $this->middleware('auth:api');
     }
 
+
+
+
+
     public function index(Request $request)
 {
     try {
         $userId = Auth::id();
         $userWords = Word::where('user_id', $userId)->get();
         $totalWordCount = $userWords->count();
+        $today = now()->toDateString();
+        $rememberWordToday = $userWords->filter(function ($word) use ($today) {
+            return $word->remember && $word->updated_at->toDateString() == $today;
+        })->count();
         $rememberedWordCount = $userWords->where('remember', true)->count();
         $nonRememberedWordCount = $totalWordCount - $rememberedWordCount;
         $progress = ProgressVocabulary::firstOrNew(['user_id' => $userId]);
@@ -29,6 +38,10 @@ class ProgressVocabularyController extends Controller
 
         $targetDay = $progress->target_day;
         $targetRememberPerDay = $progress->target_remember_perday;
+        $startDay = $progress->start_day;
+        $todayDate = Carbon::parse($today);
+        $startDate = Carbon::parse($startDay);
+        $runningDay = $todayDate->diffInDays($startDate) + 1;
 
         $response = [
             "user_id" => $userId,
@@ -37,6 +50,8 @@ class ProgressVocabularyController extends Controller
             "no_remember" => $nonRememberedWordCount,
             "target_day" => $targetDay,
             "target_remember_perday" => $targetRememberPerDay,
+            "achieved" => $rememberWordToday,
+            "running_day" => $runningDay
         ];
 
         return response([
@@ -58,7 +73,7 @@ public function update(Request $request, $id)
     $user = Auth::user();
     $targetDay = $request->input('target_day');
     $targetRememberPerDay = $request->input('target_remember_perday');
-
+    $today = now()->toDateString();
     $progress = ProgressVocabulary::where('user_id', $user->id)->find($id);
 
     if (!$progress) {
@@ -80,6 +95,8 @@ public function update(Request $request, $id)
             "errors" => $validator->messages(),
         ]);
     }
+
+    $progress->start_day = $today;
 
     $progress->update($request->all());
 

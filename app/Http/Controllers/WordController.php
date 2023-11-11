@@ -33,18 +33,6 @@ class WordController extends Controller
         }
     }
 
-    // {
-    //     try {
-    //         return response([
-    //             "status_code" => 200,
-    //             "message" => "Berhasil",
-    //             "data" => word::get()->all()
-    //         ]);
-    //     } catch (\Exception $e) {
-    //         //throw $th;
-    //     }
-    // }
-
     public function store(Request $request)
     {
         try {
